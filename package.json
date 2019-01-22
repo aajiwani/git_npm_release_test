@@ -4,7 +4,8 @@
   "description": "Git Npm registry test. Goes for free!",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "babel src --out-dir dist"
   },
   "repository": {
     "type": "git",
@@ -22,5 +23,11 @@
   "bugs": {
     "url": "https://github.com/aajiwani/git_npm_release_test/issues"
   },
-  "homepage": "https://github.com/aajiwani/git_npm_release_test#readme"
+  "homepage": "https://github.com/aajiwani/git_npm_release_test#readme",
+  "dependencies": {
+    "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
+    "babel-plugin-add-module-exports": "^1.0.0",
+    "babel-preset-env": "^1.7.0"
+  }
 }
