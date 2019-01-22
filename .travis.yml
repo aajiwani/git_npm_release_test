@@ -18,7 +18,7 @@ after_success:
 #- ./release_scripts/release.sh
 before_deploy:
 - echo "Deploying to GitHub releases"
-- ls -al releases
+# - ls -al releases
 env:
   global:
     secure: xgbZWOaQ+iO+pvI++5IdwAst0UKgn7MmccZf4AKnkkkejO0OIHQXly9JOjsQD61IYcUPPu/HO+MY2ncA7Tzhd5Qmw6yhuM7TaUgKDa1YJt/a3Ztm9XvNeLEmmsEXEV8vPzO1G0z+YIH/t+Ae6bfcXMCTL6/XlGX7XNrjdpOOnA4WD+nzdjBYAq/CnpaXEjhgagaOpQedEzKvi6WA3S6whEEC6DwbeqO5JJaWdiDeqsfUfnliOUIKaPQAWRHP/QnZjcuC4aoo92vG+SB37qGAAEWVLkkplPCGq5R4SposGLsBhwgaDG3tm8mpenrPjOKO2iqV0KgfjK9bQopiWLAgHVC45G50VA7yhEOPUguPTrHIG/Cev8W/QMgTaqTwj0Y56tFDYXcoBLLW6aQ+JoGYb+9AJNPARZayq6mx/kxgRBShHBBpRHnxhzmRhFY87V058MngJxbVwCF3suz10RVBK3R82UGRuGinK1uoxF0W2JGR0ARvnSfsbAi38dWsY+frbprQXRk2563r3jDdksZjSiCEGdl5IpOvLacdsR2kqRKAOAi6sNsxL5AB0NtqraLZwZbroHLcE7JYPPY6BMlujBae962p2wOwbzUCfvU4XEeIpnX4inbCRm1CQUEkJSE7cRhYVcg33XeQoTFie03BNirisN5P8QG4DB1sK3eGIhw=
