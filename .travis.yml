@@ -6,14 +6,12 @@ os:
 - linux
 node_js:
 - '6'
-- '5'
-- '4'
 before_install:
 - npm install -g npm
 - npm --version
 install:
 - npm install
-- npm compile
+- npm run compile
 after_success:
 - mkdir -p releases
 - PACKAGE_NAME=`npm run get_name`
