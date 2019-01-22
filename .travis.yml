@@ -1,0 +1,65 @@
+sudo: required
+dist: trusty
+group: edge
+language: node_js
+os:
+- linux
+node_js:
+- '6'
+- '5'
+- '4'
+before_install:
+- npm install -g npm
+- npm --version
+install:
+- npm install
+- npm compile
+after_success:
+- mkdir -p releases
+- PACKAGE_NAME=`npm run get_name`
+- PACKAGE_VERSION=`npm run get_version`
+- RELEASE=${PACKAGE_NAME}-${PACKAGE_VERSION}
+- COMMIT_LOG=`git log -1 --format='%ci %H %s'`
+- COMMIT_HASH=`git log -1 --format="%h"`
+- |
+  if [[ "$TRAVIS_NODE_VERSION" == "6" && "$TRAVIS_OS_NAME" == "linux" ]]; then
+    pushd releases;
+    ln -sf dist ${RELEASE};
+    zip -r ${RELEASE}.zip ${RELEASE};
+    popd;
+    ls -al releases/*;
+    if [[ -z "$TRAVIS_TAG" ]]; then
+      mv "releases/${RELEASE}.zip" "releases/${RELEASE}-${COMMIT_HASH}.zip";
+      npm run github-release -- delete \
+        --owner=aajiwani \
+        --repo=git_npm_release_test \
+        --tag="latest" \
+        --name="${TRAVIS_BRANCH}" \
+        "*.zip";
+      npm run github-release -- upload \
+        --owner=aajiwani \
+        --repo=git_npm_release_test \
+        --tag="latest" \
+        --name="${TRAVIS_BRANCH}" \
+        --body="${COMMIT_LOG}" \
+        "releases/${RELEASE}-${COMMIT_HASH}.zip";
+    fi
+  fi
+before_deploy:
+- echo "Deploying to GitHub releases"
+- ls -al releases
+env:
+  global:
+    secure: xgbZWOaQ+iO+pvI++5IdwAst0UKgn7MmccZf4AKnkkkejO0OIHQXly9JOjsQD61IYcUPPu/HO+MY2ncA7Tzhd5Qmw6yhuM7TaUgKDa1YJt/a3Ztm9XvNeLEmmsEXEV8vPzO1G0z+YIH/t+Ae6bfcXMCTL6/XlGX7XNrjdpOOnA4WD+nzdjBYAq/CnpaXEjhgagaOpQedEzKvi6WA3S6whEEC6DwbeqO5JJaWdiDeqsfUfnliOUIKaPQAWRHP/QnZjcuC4aoo92vG+SB37qGAAEWVLkkplPCGq5R4SposGLsBhwgaDG3tm8mpenrPjOKO2iqV0KgfjK9bQopiWLAgHVC45G50VA7yhEOPUguPTrHIG/Cev8W/QMgTaqTwj0Y56tFDYXcoBLLW6aQ+JoGYb+9AJNPARZayq6mx/kxgRBShHBBpRHnxhzmRhFY87V058MngJxbVwCF3suz10RVBK3R82UGRuGinK1uoxF0W2JGR0ARvnSfsbAi38dWsY+frbprQXRk2563r3jDdksZjSiCEGdl5IpOvLacdsR2kqRKAOAi6sNsxL5AB0NtqraLZwZbroHLcE7JYPPY6BMlujBae962p2wOwbzUCfvU4XEeIpnX4inbCRm1CQUEkJSE7cRhYVcg33XeQoTFie03BNirisN5P8QG4DB1sK3eGIhw=
+deploy:
+  provider: releases
+  file_glob: true
+  api_key:
+    secure: vjL79+Z3ZQdwNfwEGmLGlaaGSrn41O5d1OesyDA7RS9W1q6UFSAyiFzCwIzwqn/MTkQY4XHlKWRCGXXbVWfJyvrfgotiCBbJ3jp1tiwqjUQ2Paf8GBjcL8l5cmtg1ZavYvgppmLoZf0pzmhkFfYmeRyWmx63AGMYCJLHxblhyI9vxsLy82mwcMlvBiL4mONC8+WzNTZgnl6ViROD6UUTdPTcrFhXqx0+s235PTw2exKrSZFtsIC37w5Pr1T9pUGVzwUAvCvMXfC+RivxFF89WnyHLzzfCDyVeAIkKvp/4y/jqq8QqZAe7rCN1RItEOpQ1eMqTCVFDszKq0DVXLi1/r/RzdiRnF7i0rKY0evaS6TyYLdz6e0FEAfva+EMM/Fkpyoz9NyP+YpyxIVTMgCVT5bk3DLKfHmQDHU8Bikcnex0vhu2cv35ROakOuykn9fMUtUJJlmZncZhFN08JF/tbaGwTeAbXGbeCuGHQoJYqbWdeDyEVR09ypj5Njxeo3XeWe8nWEMmwle1XUC3EkLgpYiRXePpIC2EleoMDXiIEZQZLQ3naoEyqOc3yJvP7Mj5W/b7N4Xo9RiRnuMzLW/G6mE2FOhNZqJUwLGz3zxXYNjQz+qyNSGnanJ3AsjORMesSA+I5E0UC36UxFe4cBNhRoY6UoGFD19W0IF3KXOt89k=
+  file: releases/*.*
+  overwrite: true
+  skip_cleanup: true
+  on:
+    repo: aajiwani/git_npm_release_test
+    tags: true
+    node: '6'
